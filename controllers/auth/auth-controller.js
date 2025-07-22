@@ -14,7 +14,12 @@ const registerUser = async (req, res) => {
         message: "User Already exists with the same email! Please try again",
       });
 
-    const hashPassword = await bcrypt.hash(password, 12);
+    if (!userName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
     const newUser = new User({
       userName,
       email,
@@ -30,10 +35,11 @@ const registerUser = async (req, res) => {
     console.log(e);
     res.status(500).json({
       success: false,
-      message: "Some error occured",
+      message: "Some error occurred",
     });
   }
 };
+
 
 //login
 const loginUser = async (req, res) => {
